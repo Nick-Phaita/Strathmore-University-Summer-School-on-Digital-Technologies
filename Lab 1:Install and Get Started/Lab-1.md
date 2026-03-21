@@ -3,7 +3,13 @@
 
 ## Install Ansible on Ansible Control Node
 
+
+Update your system 
+
 ``` sudo apt update ```
+
+Install Ansible 
+
 ``` sudo apt install ansible -y ```
 
 ## Set up SSH to access remote managed hosts 
