@@ -57,15 +57,15 @@ On the Ansible Control Node, test if Ansible can connect to the managed hosts us
 
 
 
-``` ansible all -i "{your_host_ip_with_the_comma,}" -u {remote_host_username} -m ping. ```
+``` ansible all -i "{remote_host_ip_with_the_comma,}" -u {remote_host_username} -m ping. ```
 
 
 Expected success output 
 
-    ``` 192.168.64.6 | SUCCESS => {
+    remote_host_ip | SUCCESS => {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python3.10"
     },
     "changed": false,
     "ping": "pong"
-    } ```
+    } 
