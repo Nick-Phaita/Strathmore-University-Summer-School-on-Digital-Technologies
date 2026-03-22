@@ -1,7 +1,7 @@
 # A more complex Play book. But, implements Ansible Projects File Structure 
 
 
-This playbook still installs: 
+This playbook still: 
 
 - Installs Apache web server. 
 - Creates the first web page content

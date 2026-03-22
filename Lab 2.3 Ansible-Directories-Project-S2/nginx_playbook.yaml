@@ -1,0 +1,15 @@
+---
+
+- name: NGNIX with index file playbook
+  become: yes
+  hosts: all
+  remote_user: humphrey
+  roles:
+    - nginx_server
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+
+

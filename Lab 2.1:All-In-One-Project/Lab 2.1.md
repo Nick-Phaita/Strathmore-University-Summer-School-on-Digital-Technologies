@@ -1,6 +1,6 @@
 # A more complex Play book. But it is an all in one 
 
-This playbook installs: 
+This playbook: 
 
 - Installs Apache web server. 
 - Creates the first web page content
