@@ -1,4 +1,4 @@
-# Getting Started with Ansible; Installation and Remote Host Testing 
+# Lab 1: Getting Started with Ansible; Installation and Remote Host Testing 
 
 
 ## Install Ansible on Ansible Control Node
@@ -25,6 +25,9 @@ Check if you have existing private and public key combinations
 If not, in the Ansible control node create the keys.  
 
     ssh-keygen -t rsa
+or 
+
+    ssh-keygen -t ed25519
 
 Copy the generated key to the remote host (change the user and hostname variables in the command)
 
@@ -49,15 +52,11 @@ Close and restart sshd
     sudo systemctl restart sshd 
 
 
-# Test for Ansible connectivity on the Ansible Control Node
-
+## Test for Ansible connectivity on the Ansible Control Node
 
 On the Ansible Control Node, test if Ansible can connect to the managed hosts using password-less SSH
 
-
-
     ansible all -i "{remote_host_ip_with_the_comma,}" -u {remote_host_username} -m ping
-
 
 Expected success output 
 

@@ -1,0 +1,7 @@
+---
+all:
+  hosts: 
+    192.168.64.6:
+      ssh_key: /home/humphrey/.ssh/ansible_key
+
+

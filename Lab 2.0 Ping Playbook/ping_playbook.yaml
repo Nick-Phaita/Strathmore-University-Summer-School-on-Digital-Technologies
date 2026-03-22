@@ -1,0 +1,6 @@
+--- 
+
+- hosts: 192.168.64.6
+  tasks:
+  - name: Ping the target host to check connectivity
+    ping:
