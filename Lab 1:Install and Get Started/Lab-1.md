@@ -47,7 +47,7 @@ Look for the lines
 Close and restart sshd 
 
 
-``` sudo systemctl restart sshd ```
+ sudo systemctl restart sshd 
 
 
 # Test for Ansible connectivity on the Ansible Control Node
