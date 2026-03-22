@@ -1,0 +1,108 @@
+---
+
+- name: Install MicroK8s
+  snap:
+    name: microk8s
+    state: present
+    classic: true
+
+- name: Install Kubectl command line tool
+  snap:
+    name: kubectl
+    state: present
+    classic: true
+
+- name: Install Kubernetes Python Library for Ansible Python Intepreter
+  pip:
+    name: kubernetes
+    executable: pip3
+    state: latest
+  ignore_errors: no
+
+- name: Create kube directory if it does not exist # we create this directory in the home directory of the user running the playbook. They must be present.
+  file:
+    path: "/home/{{ansible_user}}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  ignore_errors: no
+
+
+- name: Add user to MicroK8s group  # we add the user running the playbook to the microk8s group so that they can run kubectl commands without sudo
+  command: usermod -a -G microk8s {{ ansible_user }}
+  ignore_errors: no
+
+- name: Change ownership of .kube directory 
+  command: chown -f -R {{ ansible_user }} /home/{{ansible_user}}/.kube
+  ignore_errors: no
+
+- name: Get kubeconfig file from MicroK8s # we get the kubeconfig file from microk8s and copy it to the .kube directory of the user running the playbook
+  command: microk8s config
+  register: microk8s_config
+  ignore_errors: no
+
+- name: Copy kubeconfig file to .kube directory # we copy the kubeconfig file to the .kube directory of the user running the playbook so that MicroK8s can communicate with the Kubectl 
+  copy:
+    content: "{{ microk8s_config.stdout }}"
+    dest: "/home/{{ansible_user}}/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  ignore_errors: no
+
+- name: Check if reboot was done on the host # we check if the host has been rebooted after adding the user to the microk8s group and connecting kubectl with MicroK8s. If not, we reboot the host.
+  stat:
+    path: /var/tmp/reboot_done_after_mk8s_group_add
+  register: reboot_check
+
+- name: Reboot the host if not done after adding user to microk8s group 
+  reboot:
+    msg: "Rebooting the host, first run, to apply changes after adding user to microk8s group."
+    reboot_timeout: 600
+    test_command: whoami # we use whoami to check if the user is able to run commands after reboot
+  when: not reboot_check.stat.exists
+  ignore_errors: no
+
+- name: Create mk8s reboot marker file # we create a marker file to indicate that the host has been rebooted after adding the user to the microk8s group
+  file:
+    path: /var/tmp/reboot_done_after_mk8s_group_add
+    state: touch
+  when: not reboot_check.stat.exists
+  ignore_errors: no
+
+
+- name: Check if MicroK8s is running # we check if microk8s is running and ready without errors
+  command: microk8s status --wait-ready
+  register: microk8s_status
+  ignore_errors: no
+
+- name: Display MicroK8s status # we display the status of microk8s to check if it is running and ready
+  debug:
+    msg: "MicroK8s status: {{ microk8s_status.stdout }}"
+  when: microk8s_status is defined and microk8s_status.stdout is defined
+
+
+- name: Verify Kubectl installation
+  command: kubectl version 
+  environment:
+    KUBECONFIG: "/home/{{ansible_user}}/.kube/config"  # Ensure kubectl uses the correct kubeconfig file
+  register: kubectl_version
+  ignore_errors: no
+
+- name: Display Kubectl cluster info
+  debug:
+    msg: "Kubectl cluster info: {{ kubectl_version.stdout }}"
+  when: kubectl_version is defined and kubectl_version.stdout is defined
+  ignore_errors: no
+  
+- name: Installing Multus Meta CNI 
+  command: kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset.yml
+  environment:
+    KUBECONFIG: "/home/{{ansible_user}}/.kube/config"  # Ensure kubectl uses the correct kubeconfig file
+  register: multus_installation
+  ignore_errors: no
+
+- name: Display Multus installation output
+  debug:
+    msg: "Multus installation output: {{ multus_installation.stdout }}"
+  when: multus_installation is defined and multus_installation.stdout is defined
+  ignore_errors: no

@@ -1,0 +1,7 @@
+---
+
+- name: Install MicroK8s, Kubernetes and Kubectl on Remote Hosts
+  hosts: all
+  become: true
+  roles:
+    - role: k8

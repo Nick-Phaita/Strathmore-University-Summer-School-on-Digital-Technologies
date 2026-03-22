@@ -1,0 +1,9 @@
+---
+
+- name : Helm installation playbook
+  hosts: all
+  become: true
+  roles:
+    - role: helm
+
+  

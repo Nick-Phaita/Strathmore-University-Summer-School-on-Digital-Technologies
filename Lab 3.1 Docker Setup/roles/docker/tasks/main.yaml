@@ -1,0 +1,61 @@
+---
+
+- name: Install Aptitude
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: yes
+
+- name: Install required system packages #insall system packages at once using pkg
+  apt:
+    pkg:
+     - apt-transport-https
+     - ca-certificates
+     - curl
+     - software-properties-common
+     - python3-pip
+     - virtualenv
+     - python3-setuptools
+    state: latest
+    update_cache: yes
+
+- name: Add Docker GPG Key 
+  apt_key: 
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+- name: Install Docker Engine
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+
+- name: Install docker engine for python
+  pip:
+    name: docker
+    state: latest
+- name: Testing Docker - Show Docker Version
+  command: docker --version
+  register: docker_version
+  ignore_errors: no
+
+- name: Display Docker Version
+  debug:
+    msg: "Docker version: {{ docker_version.stdout }}" #display the docker version output
+  when: docker_version is defined and docker_version.stdout is defined
+
+- name: Run hello world test container
+  command: docker run hello-world
+  register: hello_world_output
+  ignore_errors: no
+
+- name: Show hello world output
+  debug:
+    msg: "Hello World Output: {{ hello_world_output.stdout }}"
+  when: hello_world_output is defined and hello_world_output.stdout is defined
+    
