@@ -6,11 +6,11 @@
 
 Update your system 
 
-``` sudo apt update ```
+    sudo apt update
 
 Install Ansible 
 
-``` sudo apt install ansible -y ```
+    sudo apt install ansible -y
 
 ## Set up SSH to access remote managed hosts 
 
@@ -37,12 +37,11 @@ Enable Public Key authentication in the managed hosts and disable password login
 
 Look for the lines 
 
-PubkeyAuthentication no and uncomment and change to PubkeyAuthentication yes 
++ PubkeyAuthentication no and uncomment and change to PubkeyAuthentication yes 
 
++ AuthorizedKeysFile  .ssh/authorized_keys and uncomment 
 
-AuthorizedKeysFile  .ssh/authorized_keys and uncomment 
-
-PasswordAuthentication yes uncomment and change to PasswordAuthentication no 
++ PasswordAuthentication yes uncomment and change to PasswordAuthentication no 
 
 Close and restart sshd 
 
