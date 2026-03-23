@@ -26,7 +26,7 @@
 - Write scripts (any language) is good enough 
 
 
-Clone the repository to your prefered location. eg. Desktop 
+## Clone the repository to your preferred location. eg. Desktop 
 
     https://github.com/HumpreyDev/Strathmore-University-Summer-School-on-Digital-Technologies
 
