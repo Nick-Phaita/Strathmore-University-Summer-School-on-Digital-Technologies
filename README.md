@@ -24,3 +24,10 @@
 - Start and stop services
 - Set environment variables
 - Write scripts (any language) is good enough 
+
+
+Clone the repository to your prefered location. eg. Desktop 
+
+    https://github.com/HumpreyDev/Strathmore-University-Summer-School-on-Digital-Technologies
+
+
